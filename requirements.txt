@@ -2,3 +2,4 @@ flask
 pandas
 weasyprint
 openpyxl
+Babel
