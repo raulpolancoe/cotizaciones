@@ -5,7 +5,9 @@ import locale
 import os
 import unicodedata
 import re
-from weasyprint import HTML
+from weasyprint import HTML, CSS
+from jinja2 import Template
+from pathlib import Path
 
 app = Flask(__name__)
 
@@ -66,7 +68,9 @@ def generar():
         # Generar PDF temporal
         safe_name = limpiar_nombre(nombre)
         pdf_path = f"Cotizacion_{safe_name}.pdf"
-        HTML(string=rendered_html).write_pdf(pdf_path)
+        # HTML(string=rendered_html).write_pdf(pdf_path)
+        base_url = Path(__file__).parent.resolve()
+        HTML(string=rendered_html, base_url=base_url).write_pdf(pdf_path)
 
         return send_file(pdf_path, as_attachment=True, download_name=pdf_path, mimetype="application/pdf")
 
