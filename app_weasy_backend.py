@@ -33,6 +33,7 @@ def productos():
 
 @app.route("/generar", methods=["POST"])
 def generar():
+    pdf_path = None  # ← inicializar la variable antes de usarla en finally
     try:
         data = request.get_json()
         nombre = data.get("nombre", "Cliente")
@@ -41,11 +42,14 @@ def generar():
         total = sum(item["valor"] * item["cantidad"] for item in items)
 
         # Establecer fecha en español
-        try:
-            locale.setlocale(locale.LC_TIME, "es_CO.utf8")
-        except locale.Error:
-            locale.setlocale(locale.LC_TIME, "es_CO")
-        fecha = datetime.today().strftime("%d de %B de %Y").replace(" 0", " ")
+        # try:
+        #     locale.setlocale(locale.LC_TIME, "es_CO.utf8")
+        # except locale.Error:
+        #     locale.setlocale(locale.LC_TIME, "es_CO")
+        # fecha = datetime.today().strftime("%d de %B de %Y").replace(" 0", " ")
+        import babel.dates
+        fecha = babel.dates.format_date(datetime.today(), locale="es", format="d 'de' MMMM 'de' y")
+
 
         # Cargar plantilla y renderizar
         with open(TEMPLATE_HTML, encoding="utf-8") as f:
@@ -68,7 +72,8 @@ def generar():
 
     finally:
         # Limpieza del PDF generado
-        if os.path.exists(pdf_path):
+        if pdf_path and os.path.exists(pdf_path):
+        #if os.path.exists(pdf_path):
             try:
                 os.remove(pdf_path)
             except:
