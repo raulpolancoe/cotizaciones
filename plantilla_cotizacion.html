@@ -1,60 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Cotización</title>
-    <style>
-        body {
-            font-family: Calibri, sans-serif;
-            margin: 40px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #999;
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Cotización</title>
+  <style>
+    body {
+      font-family: Calibri, sans-serif;
+      margin: 60px 50px 100px;
+      font-size: 11pt;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header img {
+      max-width: 300px;
+      height: auto;
+    }
+    h2 {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .datos {
+      margin-bottom: 30px;
+    }
+    .datos p {
+      margin: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 6px;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    tfoot td {
+      font-weight: bold;
+    }
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background-color: #f7df00;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h2 style="text-align: center;">Reserva Ecológica</h2>
-        <p style="text-align: right;">Ibagué, {{ fecha }}</p>
-        <p>Señor(a) {{ nombre }}</p>
-    </header>
+  <header>
+    <img src="static/logo.jpg" alt="Santafé de los Guaduales">
+  </header>
 
-    <section>
-        <p>Ibagué, ___ de ___ de ___</p><p>Señor _____________________</p><p>Cotización</p><p>Por medio de la presente remito cotización para visitas a Santafé de los Guaduales.</p><p>El hospedaje o ingreso incluyen uso del salón de reunión y adecuación de este para proyección de video beam, caminata y uso de piscina.</p><p>No tenemos servicio de video beam, ni computador.</p><p>Los platos que se ofrecen en la Reserva son:</p><p>Desayunos (2 menú para todo el grupo)</p><p>Caldo de costilla</p><p>⁠Tamal</p><p>⁠Huevos rancheros y caldo de pollo</p><p>Almuerzos</p><p>Sancocho de pollo (mínimo 7)</p><p>Carne de res a la plancha</p><p>Carne de cerdo a la plancha</p><p>Pechuga a la plancha</p><p>Mojarra frita</p><p>Cenas (un mismo menú para todo el grupo)</p><p>Pechuga con arroz, ensalada y crema de champiñones </p><p>⁠Picada (res, cerdo, pollo, papa criolla, morcilla, butifarra y chorizo)</p><p>⁠Cerdo en salsa de caramelo, pure de papa y ensalada.</p><p>Refrigerios (un mismo menú para todo el grupo)</p><p>Salpicón con helado</p><p>Sándwich</p><p>Ensalada de frutas</p><p>Alitas con papas fritas</p><p>Hamburguesa</p><p>Patacona con carne desmechada</p><p>Todos los desayunos van acompañados de chocolate, pan, queso y arepa.</p><p>Nota: Los precios acá mencionados no incluyen retenciones.</p><p>Por favor, ten en cuenta que no está permitido el ingreso de bebidas ni alimentos. ¡Nos encantan las mascotas! Son bienvenidas, pero no pueden acceder al área de la piscina. Además, sus dueños deben llevar bolsas para recoger sus desechos.</p><p>Estamos a su servicio y esperamos poder atenderlos en una próxima oportunidad.</p><p>Atentamente,</p><p>Raul Polanco Triana</p><p>Gerente</p>
-    </section>
+  <div class="datos">
+    <p>Ibagué, {{ fecha }}</p>
+    <p>Señor(a) {{ nombre }}</p>
+  </div>
 
-    <h3>Detalle de productos</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Cantidad</th>
-                <th>Descripción</th>
-                <th>Valor Unitario</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item.cantidad }}</td>
-                <td>{{ item.descripcion }}</td>
-                <td>${{ "{:,.0f}".format(item.valor).replace(",", ".") }}</td>
-                <td>${{ "{:,.0f}".format(item.valor * item.cantidad).replace(",", ".") }}</td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td colspan="3"><strong>TOTAL</strong></td>
-                <td><strong>${{ "{:,.0f}".format(total).replace(",", ".") }}</strong></td>
-            </tr>
-        </tbody>
-    </table>
+  <h2><strong>Cotización</strong></h2>
+
+  <p>Por medio de la presente remito cotización para visitas a Santafé de los Guaduales.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Cantidad</th>
+        <th>Descripción</th>
+        <th>Valor Unitario</th>
+        <th>Valor Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.cantidad }}</td>
+        <td>{{ item.descripcion }}</td>
+        <td>${{ "{:,}".format(item.valor).replace(",", ".") }}</td>
+        <td>${{ "{:,}".format(item.valor * item.cantidad).replace(",", ".") }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2"></td>
+        <td><strong>TOTAL</strong></td>
+        <td><strong>${{ "{:,}".format(total).replace(",", ".") }}</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <p>El hospedaje o ingreso incluyen uso del salón de reunión y adecuación de este para proyección de video beam, caminata y uso de piscina.<br>
+  No tenemos servicio de video beam, ni computador.</p>
+
+  <footer></footer>
 </body>
 </html>
