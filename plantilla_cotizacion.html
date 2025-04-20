@@ -3,69 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>Cotización</title>
-  <style>
-    body {
-      font-family: Calibri, sans-serif;
-      margin: 60px 50px 100px;
-      font-size: 11pt;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    header img {
-      max-width: 300px;
-      height: auto;
-    }
-    h1.logo-text {
-      font-size: 16pt;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    h2 {
-      text-align: center;
-      margin: 20px 0;
-    }
-    .datos {
-      margin-bottom: 30px;
-    }
-    .datos p {
-      margin: 0;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    th, td {
-      border: 1px solid #000;
-      padding: 6px;
-      text-align: left;
-    }
-    th {
-      background-color: #f0f0f0;
-    }
-    tfoot td {
-      font-weight: bold;
-    }
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 40px;
-      background-color: #f7df00;
-    }
-  </style>
+  <link rel="stylesheet" href="static/estilosplantilla.css">
 </head>
 <body>
+  <encabezado></encabezado><br>
   <header>
     <img src="static/logo.jpg" alt="Santafé de los Guaduales">
     <h1 class="logo-text">Santafé de los Guaduales</h1>
   </header>
 
   <div class="datos">
-    <p>Ibagué, {{ fecha }}</p>
+    <p class="right-align">Ibagué, {{ fecha }}</p>
     <p>Señor(a) {{ nombre }}</p>
   </div>
 
@@ -103,6 +51,46 @@
 
   <p>El hospedaje o ingreso incluyen uso del salón de reunión y adecuación de este para proyección de video beam, caminata y uso de piscina.<br>
   No tenemos servicio de video beam, ni computador.</p>
+
+  <p><strong>Los platos que se ofrecen en la Reserva son:</strong></p>
+
+  <p><strong>Desayunos</strong><br>
+  <span class="indent">• Caldo de costilla</span><br>
+  <span class="indent">• Tamal</span><br>
+  <span class="indent">• Huevos rancheros y caldo de pollo</span><br>
+  Todos los desayunos van acompañados de chocolate, pan, queso y arepa.</p>
+
+  <strong>Almuerzos</strong><br>
+  <span class="indent">• Sancocho de pollo</span><br>
+  <span class="indent">• Carne de res a la plancha</span><br>
+  <span class="indent">• Carne de cerdo a la plancha</span><br>
+  <span class="indent">• Pechuga a la plancha</span><br>
+  <span class="indent">• Mojarra frita</span><br><br>
+
+  <strong>Cenas</strong><br>
+  <span class="indent">• Pechuga con arroz, ensalada y crema de champiñones</span><br>
+  <span class="indent">• Picada (res, cerdo, pollo, papa criolla, morcilla, butifarra y chorizo)</span><br>
+  <span class="indent">• Cerdo en salsa de caramelo, puré de papa y ensalada.</span><br><br>
+
+  <strong>Refrigerios</strong><br>
+  <span class="indent">• Salpicón con helado</span><br>
+  <span class="indent">• Sándwich</span><br>
+  <span class="indent">• Ensalada de frutas</span><br>
+  <span class="indent">• Alitas con papas fritas</span><br>
+  <span class="indent">• Hamburguesa</span><br>
+  <span class="indent">• Patacona con carne desmechada</span><br><br>
+
+  <p><strong>Nota:</strong> Los precios acá mencionados no incluyen retenciones.<br>
+    <br>
+  Por favor, ten en cuenta que no está permitido el ingreso de bebidas ni alimentos. ¡Nos encantan las mascotas! Son bienvenidas,<br>
+  pero no pueden acceder al área de la piscina. Además, sus dueños deben llevar bolsas para recoger sus desechos.<br>
+
+  <p>Estamos a su servicio y esperamos poder atenderlos en una próxima oportunidad.</p>
+
+  <br>
+  <img src="static/firma.jpg" alt="Firma" style="max-width: 200px;">
+  <p><strong>Raul Polanco Triana<br>
+  Gerente</strong></p>
 
   <footer></footer>
 </body>
