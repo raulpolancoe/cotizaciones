@@ -69,19 +69,24 @@ encabezado {
   margin: 100px 50px;
 
   @top-center {
-    content: element(header);
+    content: element(encabezado);
   }
 
   @bottom-center {
-    content: element(footer);
+    content: element(piepagina);
   }
 }
 
-.encabezado,
-.footer {
-  position: running(footer);  /* o running(header) según corresponda */
-  width: 100vw;               /* 🔥 fuerza que ocupe todo el ancho visible */
+.encabezado {
+  position: running(encabezado);
   height: 40px;
   background-color: #f7df00;
-  display: block;
+  width: 100%;
+}
+
+.piepagina {
+  position: running(piepagina);
+  height: 40px;
+  background-color: #f7df00;
+  width: 100%;
 }
