@@ -66,7 +66,7 @@ encabezado {
   background-color: #f7df00;
 }
 @page {
-  margin: 1px 1px;
+  margin: 80px 50px;
 
   @top-center {
     content: element(header);
