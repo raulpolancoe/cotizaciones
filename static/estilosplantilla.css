@@ -76,10 +76,9 @@ encabezado {
     content: element(footer);
   }
 }
-
 .encabezado,
 .footer {
   height: 40px;
   background-color: #f7df00;
-  width: 100%;
+  position: fixed;
 }
