@@ -80,7 +80,7 @@ encabezado {
 .encabezado,
 .footer {
   position: running(footer);  /* o running(header) según corresponda */
-  width: 2000;               /* 🔥 fuerza que ocupe todo el ancho visible */
+  width: 2000px;               /* 🔥 fuerza que ocupe todo el ancho visible */
   height: 40px;
   background-color: #f7df00;
   display: block;
