@@ -71,9 +71,10 @@
 
     function actualizarTotal(i) {
     const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
-    const valor = Number(productos[i].Valor);  // 👈 convierte a número
+    const precioInput = document.getElementById(`precio-${i}`);
+    const valor = parseInt(precioInput.value);  // 👈 toma el valor actual del input
     const total = valor * cantidad;
-    document.getElementById(`total-${i}`).innerText = `$${total.toLocaleString()}`;
+    document.getElementById(`total-${i}`).innerText = `$${total.toLocaleString("es-CO")}`;
     }
 
 
