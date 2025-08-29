@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Generador de Documento</title>
-    <link rel="stylesheet" href="/static/estilos.css">
+    <link rel="stylesheet" href="static/estilos.css">
+    <script src="static/script.js" defer></script>
 </head>
 <body>
     <h1>Generador de Documento</h1>
-    <form id="cotizadorForm" method="post">
+    <form id="formulario" method="POST" action="/generar_pdf">
         <label for="nombre">Nombre del remitente:</label>
         <input type="text" id="nombre" name="nombre" required>
 
@@ -17,16 +18,16 @@
             <option value="Cuenta de cobro">Cuenta de cobro</option>
         </select>
 
-        <label for="nit">NIT (solo para cuenta de cobro):</label>
-        <input type="text" id="nit" name="nit">
-
-        <label for="fecha_evento">Fecha del evento (solo para cuenta de cobro):</label>
-        <input type="date" id="fecha_evento" name="fecha_evento">
-
         <label for="texto_abono">Texto de abono (solo para cuenta de cobro):</label>
         <input type="text" id="texto_abono" name="texto_abono">
 
-        <table id="tabla-productos">
+        <label for="concepto">Concepto del servicio:</label>
+        <input type="text" id="concepto" name="concepto" placeholder="Ej. Pasadía y Alimentación">
+
+        <label for="fecha_servicio">Fecha del servicio:</label>
+        <input type="date" id="fecha_servicio" name="fecha_servicio">
+
+        <table>
             <thead>
                 <tr>
                     <th>Producto</th>
@@ -36,13 +37,11 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Los productos se insertan aquí con JS -->
-            </tbody>
+            <tbody id="tabla-productos"></tbody>
         </table>
 
-        <button type="submit">Generar Documento</button>
+        <input type="hidden" name="items" id="items_input">
+        <button type="submit">Generar PDF</button>
     </form>
-    <script src="/static/script.js"></script>
 </body>
 </html>
