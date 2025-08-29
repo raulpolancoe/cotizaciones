@@ -1,48 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Generador de Documento</title>
-    <link rel="stylesheet" href="/static/estilos.css">
+  <meta charset="UTF-8">
+  <title>Generador de Cotización</title>
+  <style>
+    body { font-family: Calibri, sans-serif; margin: 40px; }
+    h1 { color: #2c3e50; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    input[type='number'] { width: 60px; }
+    input[type='text'] { width: 300px; padding: 5px; }
+    button { padding: 5px 10px; margin: 5px; }
+  </style>
 </head>
 <body>
-    <h1>Generador de Documento</h1>
-    <form id="cotizadorForm" method="post">
-        <label for="nombre">Nombre del remitente:</label>
-        <input type="text" id="nombre" name="nombre" required>
+  <h1>Generador de Cotización</h1>
 
-        <label for="tipo_documento">Tipo de documento:</label>
-        <select id="tipo_documento" name="tipo_documento">
-            <option value="Cotización">Cotización</option>
-            <option value="Cuenta de cobro">Cuenta de cobro</option>
-        </select>
+  <label>Nombre del remitente: <input type="text" id="nombreRemitente"></label>
 
-        <label for="nit">NIT (solo para cuenta de cobro):</label>
-        <input type="text" id="nit" name="nit">
+  <table id="tablaProductos">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="contenidoTabla">
+    </tbody>
+  </table>
 
-        <label for="fecha_evento">Fecha del evento (solo para cuenta de cobro):</label>
-        <input type="date" id="fecha_evento" name="fecha_evento">
+  <button onclick="generarCotizacion()">Generar Cotización</button>
 
-        <label for="texto_abono">Texto de abono (solo para cuenta de cobro):</label>
-        <input type="text" id="texto_abono" name="texto_abono">
+  <script>
+    let productos = [];
 
-        <table id="tabla-productos">
-            <thead>
-                <tr>
-                    <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Los productos se insertan aquí con JS -->
-            </tbody>
-        </table>
+    fetch("/productos")
+      .then(res => res.json())
+      .then(data => {
+        productos = data;
+        console.log("✅ Productos recibidos:", productos);
+        const tbody = document.getElementById("contenidoTabla");
+        productos.forEach((p, i) => {
+        console.log(`➡️ Producto #${i}`, p);
+        const valor = p.valor ?? 0;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${p.Descripcion}</td>
+            <td><input type='number' min='0' value='${p.Valor}' id='precio-${i}'></td>
+            <td><input type='number' min='0' value='0' onchange='actualizarTotal(${i})' id='cantidad-${i}'></td>
+            <td id='total-${i}'>$0</td>
+            <td>
+            <button onclick='cambiarCantidad(${i}, 1)'>+</button>
+            <button onclick='cambiarCantidad(${i}, -1)'>-</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+        });
 
-        <button type="submit">Generar Documento</button>
-    </form>
-    <script src="/static/script.js"></script>
+      });
+
+    function cambiarCantidad(i, delta) {
+      const input = document.getElementById(`cantidad-${i}`);
+      const nuevaCantidad = Math.max(0, parseInt(input.value) + delta);
+      input.value = nuevaCantidad;
+      actualizarTotal(i);
+    }
+
+    function actualizarTotal(i) {
+    const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
+    const precioInput = document.getElementById(`precio-${i}`);
+    const valor = parseInt(precioInput.value);  // 👈 toma el valor actual del input
+    const total = valor * cantidad;
+    document.getElementById(`total-${i}`).innerText = `$${total.toLocaleString("es-CO")}`;
+    }
+
+
+    function generarCotizacion() {
+    const nombre = document.getElementById("nombreRemitente").value.trim();
+    if (!nombre) {
+      alert("Por favor ingresa el nombre del destinatario.");
+      return;
+    }
+
+    const items = productos.map((p, i) => {
+      const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
+      const valor = Number(document.getElementById(`precio-${i}`).value);
+      return cantidad > 0 ? { descripcion: p.Descripcion, valor, cantidad } : null;
+    }).filter(x => x !== null);
+
+    fetch("/generar", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, items })
+    })
+    .then(res => {
+      const disposition = res.headers.get('Content-Disposition');
+      let fileName = "cotizacion.pdf";
+      if (disposition && disposition.includes("filename=")) {
+        fileName = disposition.split("filename=")[1].replace(/['"]/g, '');
+      }
+
+      return res.blob().then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+      });
+    });
+  }
+  </script>
 </body>
 </html>
