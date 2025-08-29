@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Generador de Documento</title>
+  <title>Generador de Cotización</title>
   <style>
     body { font-family: Calibri, sans-serif; margin: 40px; }
     h1 { color: #2c3e50; }
@@ -12,20 +11,12 @@
     input[type='number'] { width: 60px; }
     input[type='text'] { width: 300px; padding: 5px; }
     button { padding: 5px 10px; margin: 5px; }
-    label { display: block; margin: 10px 0; }
   </style>
 </head>
 <body>
-  <h1>Generador de Documento</h1>
+  <h1>Generador de Cotización</h1>
 
   <label>Nombre del remitente: <input type="text" id="nombreRemitente"></label>
-  <label>Tipo de documento:
-    <select id="tipoDocumento">
-      <option value="Cotización">Cotización</option>
-      <option value="Cuenta de cobro">Cuenta de cobro</option>
-    </select>
-  </label>
-  <label>Texto de abono (solo para cuenta de cobro): <input type="text" id="textoAbono"></label>
 
   <table id="tablaProductos">
     <thead>
@@ -41,7 +32,7 @@
     </tbody>
   </table>
 
-  <button onclick="generarDocumento()">Generar PDF</button>
+  <button onclick="generarCotizacion()">Generar Cotización</button>
 
   <script>
     let productos = [];
@@ -50,21 +41,25 @@
       .then(res => res.json())
       .then(data => {
         productos = data;
+        console.log("✅ Productos recibidos:", productos);
         const tbody = document.getElementById("contenidoTabla");
         productos.forEach((p, i) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-              <td>${p.Descripcion}</td>
-              <td><input type='number' value='${p.Valor}' onchange='actualizarTotal(${i})' id='valor-${i}'></td>
-              <td><input type='number' min='0' value='0' onchange='actualizarTotal(${i})' id='cantidad-${i}'></td>
-              <td id='total-${i}'>$0</td>
-              <td>
-                <button onclick='cambiarCantidad(${i}, 1)'>+</button>
-                <button onclick='cambiarCantidad(${i}, -1)'>-</button>
-              </td>
-          `;
-          tbody.appendChild(row);
+        console.log(`➡️ Producto #${i}`, p);
+        const valor = p.valor ?? 0;
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${p.Descripcion}</td>
+            <td><input type='number' min='0' value='${p.Valor}' id='precio-${i}'></td>
+            <td><input type='number' min='0' value='0' onchange='actualizarTotal(${i})' id='cantidad-${i}'></td>
+            <td id='total-${i}'>$0</td>
+            <td>
+            <button onclick='cambiarCantidad(${i}, 1)'>+</button>
+            <button onclick='cambiarCantidad(${i}, -1)'>-</button>
+            </td>
+        `;
+        tbody.appendChild(row);
         });
+
       });
 
     function cambiarCantidad(i, delta) {
@@ -75,36 +70,48 @@
     }
 
     function actualizarTotal(i) {
-      const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
-      const valor = parseFloat(document.getElementById(`valor-${i}`).value);
-      const total = valor * cantidad;
-      document.getElementById(`total-${i}`).innerText = `$${total.toLocaleString()}`;
+    const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
+    const precioInput = document.getElementById(`precio-${i}`);
+    const valor = parseInt(precioInput.value);  // 👈 toma el valor actual del input
+    const total = valor * cantidad;
+    document.getElementById(`total-${i}`).innerText = `$${total.toLocaleString("es-CO")}`;
     }
 
-    function generarDocumento() {
-      const nombre = document.getElementById("nombreRemitente").value;
-      const tipo = document.getElementById("tipoDocumento").value;
-      const texto_abono = document.getElementById("textoAbono").value;
-      const items = productos.map((p, i) => {
-        const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
-        const valor = parseFloat(document.getElementById(`valor-${i}`).value);
-        return cantidad > 0 ? { descripcion: p.Descripcion, valor, cantidad } : null;
-      }).filter(x => x !== null);
 
-      fetch("/generar", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, tipo, texto_abono, items })
-      })
-      .then(res => res.blob())
-      .then(blob => {
+    function generarCotizacion() {
+    const nombre = document.getElementById("nombreRemitente").value.trim();
+    if (!nombre) {
+      alert("Por favor ingresa el nombre del destinatario.");
+      return;
+    }
+
+    const items = productos.map((p, i) => {
+      const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
+      const valor = Number(document.getElementById(`precio-${i}`).value);
+      return cantidad > 0 ? { descripcion: p.Descripcion, valor, cantidad } : null;
+    }).filter(x => x !== null);
+
+    fetch("/generar", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, items })
+    })
+    .then(res => {
+      const disposition = res.headers.get('Content-Disposition');
+      let fileName = "cotizacion.pdf";
+      if (disposition && disposition.includes("filename=")) {
+        fileName = disposition.split("filename=")[1].replace(/['"]/g, '');
+      }
+
+      return res.blob().then(blob => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${tipo}_${nombre.replace(/ /g, "_")}.pdf`;
+        a.download = fileName;
         a.click();
       });
-    }
+    });
+  }
   </script>
 </body>
 </html>
