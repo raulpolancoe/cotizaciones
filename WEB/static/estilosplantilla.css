@@ -1,9 +1,9 @@
 @page { size: Letter; margin: 22mm 18mm 24mm; }
 * { box-sizing: border-box; color: #000; }
 body { font-family: Calibri, Arial, sans-serif; font-size: 10.5pt; line-height: 1.35; margin: 0; }
-.barra-superior,.barra-inferior { position: fixed; left: -18mm; width: calc(100% + 36mm); height: 7mm; background: #80952d; }
-.barra-superior { top: -22mm; border-bottom: 2mm solid #d92f25; }
-.barra-inferior { bottom: -24mm; border-top: 2mm solid #d92f25; }
+.barra-superior,.barra-inferior { position: fixed; left: -18mm; width: calc(100% + 36mm); height: 9mm; background: #f7df00; }
+.barra-superior { top: -22mm; }
+.barra-inferior { bottom: -24mm; }
 header { text-align: center; margin: 0 0 8mm; }
 header img { width: 48mm; height: 28mm; object-fit: contain; }
 h1.logo-text { display: none; }
