@@ -49,7 +49,7 @@
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${p.Descripcion}</td>
-            <td><input type='number' min='0' value='${p.Valor}' id='precio-${i}'></td>
+            <td>$${p.Valor.toLocaleString()}</td>
             <td><input type='number' min='0' value='0' onchange='actualizarTotal(${i})' id='cantidad-${i}'></td>
             <td id='total-${i}'>$0</td>
             <td>
@@ -71,10 +71,9 @@
 
     function actualizarTotal(i) {
     const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
-    const precioInput = document.getElementById(`precio-${i}`);
-    const valor = parseInt(precioInput.value);  // 👈 toma el valor actual del input
+    const valor = Number(productos[i].Valor);  // 👈 convierte a número
     const total = valor * cantidad;
-    document.getElementById(`total-${i}`).innerText = `$${total.toLocaleString("es-CO")}`;
+    document.getElementById(`total-${i}`).innerText = `$${total.toLocaleString()}`;
     }
 
 
@@ -87,8 +86,7 @@
 
     const items = productos.map((p, i) => {
       const cantidad = parseInt(document.getElementById(`cantidad-${i}`).value);
-      const valor = Number(document.getElementById(`precio-${i}`).value);
-      return cantidad > 0 ? { descripcion: p.Descripcion, valor, cantidad } : null;
+      return cantidad > 0 ? { descripcion: p.Descripcion, valor: p.Valor, cantidad } : null;
     }).filter(x => x !== null);
 
     fetch("/generar", {

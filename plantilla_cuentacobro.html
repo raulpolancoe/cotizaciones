@@ -1,64 +1,139 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Cuenta de cobro</title>
-    <style>
-        body { font-family: Calibri, sans-serif; font-size: 11pt; margin: 40px; }
-        h1, h2, h3 { text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #000; padding: 4px; text-align: center; }
-        .right { text-align: right; }
-        .highlight { background-color: #f7df00; }
-    </style>
+<meta charset="UTF-8">
+<title>{{ tipo_documento }}</title>
+<link rel="stylesheet" href="static/estilosplantilla.css">
 </head>
 <body>
-    <p class="right">Ibagué, {{ fecha }}</p>
-    <h2>Cuenta de cobro 001</h2>
-    <p><strong>COMUNIDAD DE HERMANOS MARISTAS DE LA ENSEÑANZA</strong><br>
-    NIT: 860.006.744-9</p>
+<header>
+<img src="static/logo.jpg" alt="Santafé de los Guaduales">
+<h1 class="logo-text">Santafé de los Guaduales</h1>
+</header>
 
-    <p><strong>DEBE A:</strong><br>
-    SANTAFÉ DE LOS GUADUALES RESERVA ECOLÓGICA<br>
-    RAUL POLANCO TRIANA<br>
-    NIT: 17161261-8<br>
-    REGIMEN SIMPLIFICADO</p>
 
-    <h3>RAZÓN Y CONCEPTO</h3>
-    <p>Por concepto de <span class="highlight">{{ concepto }}</span> en la Reserva Ecológica Santafé de los Guaduales el día <span class="highlight">{{ fecha_servicio }}</span> de {{ fecha_actual.year }} la suma de <strong>{{ total_letras }} ({{ total_numeros }})</strong></p>
+<div class="datos">
+<p class="right-align">Ibagué, {{ fecha }}</p>
+<p>Señor(a) {{ nombre }}</p>
+{% if tipo_documento == 'Cuenta de cobro' %}
+<p><strong>NIT: {{ nit_cliente }}</strong></p>
+{% endif %}
+</div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Cantidad</th>
-                <th>Descripción</th>
-                <th>Valor Unitario</th>
-                <th>Valor Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{ item.cantidad }}</td>
-                <td>{{ item.descripcion }}</td>
-                <td>${{ "{:,.0f}".format(item.valor).replace(",", ".") }}</td>
-                <td>${{ "{:,.0f}".format(item.valor * item.cantidad).replace(",", ".") }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3"><strong>TOTAL</strong></td>
-                <td><strong>${{ "{:,.0f}".format(total).replace(",", ".") }}</strong></td>
-            </tr>
-        </tfoot>
-    </table>
 
-    <p>Favor realizar el pago en la cuenta de ahorros Bancolombia 5070-35353-49 a nombre de Raul Polanco Triana.<br>
-    Abono recibido <strong>{{ texto_abono }}</strong></p>
+<h2><strong>{{ tipo_documento }}</strong></h2>
 
-    <p>Atentamente,</p>
-    <br><br><br>
-    <p><strong>Raul Polanco Triana</strong></p>
+
+{% if tipo_documento == 'Cuenta de cobro' %}
+<p>Por concepto de <strong>{{ concepto }}</strong> en la Reserva Ecológica Santafé de los Guaduales el día <strong>{{ fecha_servicio }}</strong> de {{ fecha[:4] }} la suma de <strong>{{ total_en_letras }}</strong></p>
+{% else %}
+<p>Por medio de la presente remito cotización para visitas a Santafé de los Guaduales.</p>
+{% endif %}
+
+
+<table>
+<thead>
+<tr>
+<th>Cantidad</th>
+<th>Descripción</th>
+<th>Valor Unitario</th>
+<th>Valor Total</th>
+</tr>
+</thead>
+<tbody>
+{% for item in items %}
+<tr>
+<td>{{ item.cantidad }}</td>
+<td>{{ item.descripcion }}</td>
+<td>${{ "{:,}".format(item.valor).replace(",", ".") }}</td>
+<td>${{ "{:,}".format(item.valor * item.cantidad).replace(",", ".") }}</td>
+</tr>
+{% endfor %}
+</tbody>
+<tfoot>
+<tr>
+<td colspan="2"></td>
+<td><strong>TOTAL</strong></td>
+<td><strong>${{ "{:,}".format(total).replace(",", ".") }}</strong></td>
+</tr>
+{% if tipo_documento == 'Cuenta de cobro' and abono %}
+<tr>
+<td colspan="2"></td>
+<td>Abono</td>
+<td>${{ "{:,}".format(abono).replace(",", ".") }}</td>
+</tr>
+<tr>
+<td colspan="2"></td>
+<td><strong>Saldo</strong></td>
+<td><strong>${{ "{:,}".format(total - abono).replace(",", ".") }}</strong></td>
+</tr>
+{% endif %}
+</tfoot>
+</table>
+
+
+{% if tipo_documento == 'Cotización' %}
+<p>El hospedaje o ingreso incluyen uso del salón de reunión y adecuación de este para proyección de video beam, caminata y uso de piscina.<br>
+No tenemos servicio de video beam, ni computador.</p>
+
+
+<p><strong>Los platos que se ofrecen en la Reserva son:</strong></p>
+
+
+<p><strong>Desayunos</strong><br>
+<span class="indent">• Caldo de costilla</span><br>
+<span class="indent">• Tamal</span><br>
+<span class="indent">• Huevos rancheros y caldo de pollo</span><br><br>
+
+
+<strong>Almuerzos</strong><br>
+<span class="indent">• Sancocho de pollo</span><br>
+<span class="indent">• Carne de res a la plancha</span><br>
+<span class="indent">• Carne de cerdo a la plancha</span><br>
+<span class="indent">• Pechuga a la plancha</span><br>
+<span class="indent">• Mojarra frita</span><br><br>
+
+
+<strong>Cenas</strong><br>
+<span class="indent">• Pechuga con arroz, ensalada y crema de champiñones</span><br>
+<span class="indent">• Picada (res, cerdo, pollo, papa criolla, morcilla, butifarra y chorizo)</span><br>
+<span class="indent">• Cerdo en salsa de caramelo, puré de papa y ensalada.</span><br><br>
+
+
+<strong>Refrigerios</strong><br>
+<span class="indent">• Salpicón con helado</span><br>
+<span class="indent">• Sándwich</span><br>
+<span class="indent">• Ensalada de frutas</span><br>
+<span class="indent">• Alitas con papas fritas</span><br>
+<span class="indent">• Hamburguesa</span><br>
+<span class="indent">• Patacona con carne desmechada</span><br><br>
+
+
+Todos los desayunos van acompañados de chocolate, pan, queso y arepa.</p>
+
+
+<p><strong>Nota:</strong> Los precios acá mencionados no incluyen retenciones.<br>
+Por favor, ten en cuenta que no está permitido el ingreso de bebidas ni alimentos.<br>
+¡Nos encantan las mascotas! Son bienvenidas, pero no pueden acceder al área de la piscina.<br>
+Además, sus dueños deben llevar bolsas para recoger sus desechos.</p>
+
+
+<p>Estamos a su servicio y esperamos poder atenderlos en una próxima oportunidad.</p>
+{% endif %}
+
+
+{% if tipo_documento == 'Cuenta de cobro' %}
+<p>Favor realizar el pago en la cuenta de ahorros Bancolombia 5070-35353-49 a nombre de Raul Polanco Triana.<br>
+Abono recibido <strong>{{ texto_abono }}</strong></p>
+{% endif %}
+
+
+<br>
+<img src="static/firma.png" alt="Firma" style="max-width: 200px;">
+<p><strong>Raul Polanco Triana<br>
+Gerente</strong></p>
+
+
+<footer></footer>
 </body>
 </html>
