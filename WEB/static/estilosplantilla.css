@@ -12,6 +12,7 @@ h3 { margin: 3mm 0 1mm; font-size: 10.5pt; }
 .subtitulo { border-bottom: 1px solid #000; padding-bottom: 1.5mm; }
 .right-align { text-align: right; }
 .datos,.cliente { margin-bottom: 5mm; }
+.cliente,.empresa { text-align: center; }
 .datos p,.cliente p,.empresa p { margin: 0; }
 .indent { margin-left: 2em; display: inline-block; }
 table { width: 100%; border-collapse: collapse; margin: 5mm 0; page-break-inside: avoid; }
