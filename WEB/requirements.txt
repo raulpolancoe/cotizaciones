@@ -1,0 +1,6 @@
+flask
+pandas
+weasyprint
+openpyxl
+Babel
+num2words

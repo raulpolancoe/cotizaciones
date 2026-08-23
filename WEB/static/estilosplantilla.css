@@ -1,0 +1,25 @@
+@page { size: Letter; margin: 22mm 18mm 24mm; }
+* { box-sizing: border-box; color: #000; }
+body { font-family: Calibri, Arial, sans-serif; font-size: 10.5pt; line-height: 1.35; margin: 0; }
+.barra-superior,.barra-inferior { position: fixed; left: -18mm; width: calc(100% + 36mm); height: 7mm; background: #80952d; }
+.barra-superior { top: -22mm; border-bottom: 2mm solid #d92f25; }
+.barra-inferior { bottom: -24mm; border-top: 2mm solid #d92f25; }
+header { text-align: center; margin: 0 0 8mm; }
+header img { width: 48mm; height: 28mm; object-fit: contain; }
+h1.logo-text { display: none; }
+h2 { text-align: center; font-size: 15pt; margin: 5mm 0; text-transform: uppercase; }
+h3 { margin: 3mm 0 1mm; font-size: 10.5pt; }
+.subtitulo { border-bottom: 1px solid #000; padding-bottom: 1.5mm; }
+.right-align { text-align: right; }
+.datos,.cliente { margin-bottom: 5mm; }
+.datos p,.cliente p,.empresa p { margin: 0; }
+.indent { margin-left: 2em; display: inline-block; }
+table { width: 100%; border-collapse: collapse; margin: 5mm 0; page-break-inside: avoid; }
+th,td { border: 1px solid #000; padding: 2mm; text-align: left; }
+th { background: #edf0df; font-weight: bold; }
+th:nth-child(1),td:nth-child(1) { text-align: center; }
+th:nth-child(3),th:nth-child(4),td:nth-child(3),td:nth-child(4) { text-align: right; }
+tfoot td { font-weight: normal; }
+tfoot tr:first-child td,.saldo td { border-top: 2px solid #000; }
+.firma { margin-top: 9mm; page-break-inside: avoid; }
+.firma img { display: block; max-width: 45mm; max-height: 22mm; object-fit: contain; }
