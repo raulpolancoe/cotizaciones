@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: cotizaciones
+    runtime: python
+    rootDir: WEB
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app_weasy_backend:app
+    healthCheckPath: /
+    autoDeploy: true
